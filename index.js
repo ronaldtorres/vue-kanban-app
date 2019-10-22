@@ -14,8 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // Init DB
 
-require('./db/connection')();
-
+//require('./db/connection')();
 
 app.get('/', (req, res) => {
     res.redirect('/api');
