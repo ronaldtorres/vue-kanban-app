@@ -1,6 +1,8 @@
 node_modules
+hot-update
 .vscode
 .git
+public
 
 ### Node ###
 # Logs

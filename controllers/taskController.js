@@ -9,8 +9,8 @@ const response = {
     }
 }
 
-
 module.exports = {
+
     all(req, res) {
         TaskModel.find({}, (err, docs) => {
             if (err) {
@@ -18,7 +18,6 @@ module.exports = {
             }
 
             res.json({
-                status: 'Success',
                 code: 200,
                 data: docs
             });
@@ -28,38 +27,50 @@ module.exports = {
     create(req, res) {
         let data = new TaskModel(req.body);
         data.save().then((item) => {
-            res.status = 200;
             res.json({
-                message: 'Task add correctly',
-                status: 200,
+                result: item,
+                code: 201,
             })
         })
     },
 
     find(req, res) {
-        let id = req.params.taskId;
-        TaskModel.find({'_id': id}, (err, docs) => {
+        TaskModel.findById({'_id': req.params.taskId}, (err, docs) => {
             if (err) {
-                res.json({
+               return res.json({
                     error: err,
                     code: 400
                 });
             }
     
-            res.status(200).json(docs);
+            res.status(200).json({
+                result: docs
+            });
         });
+    },
+
+    update(req, res){
+        TaskModel.findByIdAndUpdate({_id: req.params.taskId}, req.body, (err, doc) => {
+            if(err) {
+                response.error(err);
+            };
+
+            res.json({
+                code: 200,
+                data: doc
+            });
+        })
     },
 
     delete(req, res) {
         TaskModel.findByIdAndRemove({'_id': req.params.taskId}, (err, doc) => {
-            if(err) return res.json({
-                error: err,
-                code: 400
-            });
+            if(err) {
+                response.error(err);
+            };
+
             res.json({
-                status: 'Success',
                 code: 200,
-                message: 'the task has been deleted'
+                result: 'the task has been deleted'
             });
         })
     }
