@@ -1,6 +1,8 @@
 node_modules
 .vscode
 .git
+public
+.DS_store
 
 ### Node ###
 # Logs
