@@ -11,11 +11,7 @@ Vue.use(ElementUI);
 
 new Vue({
     el: '#app',
-    render: h => h(App),
-    mounted() {
-        console.log('App initialized');
-    },
-    methods: {}
+    render: h => h(App)
 });
 
 /*
@@ -39,4 +35,3 @@ new Vue({
         }
     }).$mount('#app');
  */
-

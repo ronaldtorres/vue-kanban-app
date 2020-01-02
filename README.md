@@ -1,8 +1,8 @@
-# Bijju app
+# Biju app
 
 ===
 
-Bijju it's a multipurpose application that seeks for users to have most ot the tools on the same place.
+Biju it's a multipurpose application that seeks for users to have most ot the tools on the same place.
 
 Some features  are:
 

@@ -1,18 +1,18 @@
 <template>
   <el-container>
     <el-header>
-      <h1>Bijju App</h1>
+      <h1>Biju App</h1>
     </el-header>
     <BToolbar @createTask="addTask" />
-      <div>
-        <el-row :gutter="20">
-          <el-col :span="6" v-for="task in tasks" :key="task._id">
-            <div class="grid-content">
-              <BCard :data="task" @removeTask="removeTask" @updateTask="updateTask"/>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
+    <el-row class="task-board">
+      <el-col :span="6">
+        <template v-for="task in tasks">
+          <div class="card-item" :key="task._id">
+            <BCard :data="task" @removeTask="removeTask" @updateTask="updateTask" />
+          </div>
+        </template>
+      </el-col>
+    </el-row>
   </el-container>
 </template>
 
@@ -27,7 +27,8 @@ export default {
   },
   data() {
     return {
-      tasks: undefined
+      tasks: undefined,
+      mosonryId: "masonry"
     };
   },
 
@@ -40,25 +41,35 @@ export default {
       fetch("/api/tasks")
         .then(res => res.json())
         .then(res => {
-          this.tasks = Object.fromEntries(res.data.map((t) => [t._id, t]));
+          this.tasks = Object.fromEntries(res.data.map(t => [t._id, t]));
         })
         .catch(err => console.log(err));
     },
 
-    addTask(task){
+    addTask(task) {
       this.$set(this.tasks, task._id, task);
     },
 
-    removeTask(task){
+    removeTask(task) {
       this.$delete(this.tasks, task._id);
     },
 
-    updateTask(task){
+    updateTask(task) {
       // Do something...
     }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.card-item {
+  width: 300px;
+  margin: 10px;
+}
 </style>
