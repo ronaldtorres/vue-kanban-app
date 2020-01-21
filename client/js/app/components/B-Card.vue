@@ -1,35 +1,21 @@
 <template>
   <el-card class="box-card" :body-style="{ padding: '0px' }">
-    <div slot="header" class="clearfix">
-      <el-row :gutter="10" type="flex" justify="space-between">
-        <el-col :span="20" class="grid-content">
-          <span @input="updateTask('title')" ref="title" contenteditable>{{ data.title }}</span>
-        </el-col>
-        <el-col :span="2" class="grid-content">
-          <el-dropdown trigger="click">
-            <span class="el-dropdown-link">
-              <i class="el-icon-more"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="removeTask()" icon="el-icon-plus">Delete</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="text item pd-none">
+    <div class="item pd-none">
+      <div class="handler"></div>
       <div
         ref="description"
+        v-html="data.description"
         @input="updateTask('description')"
         contenteditable
         class="display-1 text--primary"
-      >{{ data.description }}</div>
+      ></div>
+      <el-button type="danger" size="mini" circle @click.native="removeTask()" icon="el-icon-delete" />
     </div>
   </el-card>
 </template>
 
 <script>
-import Debounce from '../utils/debounce'
+import _ from 'lodash';
 
 export default {
   props: {
@@ -62,20 +48,13 @@ export default {
         });
     },
 
-    updateTask: Debounce(function(key) {
-      this[key] = this.$refs[key].innerText;
-      console.log(this[key]);
+    updateTask: _.debounce(function(key) {
+      this[key] = this.$refs[key].innerHTML;
 
-      fetch(`/api/tasks/${this.data._id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          [key]: this.$refs[key].innerText
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.json())
+      this.$http
+        .put(`/api/tasks/${this.data._id}`, {
+          [key]: this[key]
+        })
         .then(res => {
           this.$emit("updateTask", this.$data);
         })
@@ -90,13 +69,47 @@ export default {
 
 <style scoped lang="scss">
 .el-card {
+  position: relative;
+  border-radius: 6px;
+  box-shadow: none;
+  margin-bottom: 8px;
+
   *[contenteditable]:focus {
     outline: none;
   }
 
+  &:hover{
+    .handler, .el-button.el-button--mini{
+      opacity: 1;
+    }
+  }
+  
+  .handler{
+    cursor: pointer;
+    background: #F2F6FC;
+    width: 5px;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    opacity: 0;
+    transition: width 200ms ease;
+
+    &:hover{
+      width: 8px;
+    }
+  }
+
+  .el-button.el-button--mini {
+    padding: 6px;
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    opacity: 0;
+  }
+
   &__body {
     div[contenteditable] {
-      padding: 20px;
+      padding: 16px;
     }
   }
 }

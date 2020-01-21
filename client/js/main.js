@@ -1,16 +1,22 @@
 import '../scss/app.scss';
+import 'element-ui/lib/theme-chalk/index.css';
 
 import Vue from 'vue';
 import App from './app/App.vue';
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import axios from 'axios';
+import vuex from 'vuex';
+import store from './app/store/store';
 
+Vue.use(ElementUI);
+Vue.use(vuex);
 
 Vue.config.productionTip = false;
-Vue.use(ElementUI);
+Vue.prototype.$http = axios;
 
 new Vue({
     el: '#app',
+    store: new vuex.Store(store),
     render: h => h(App)
 });
 

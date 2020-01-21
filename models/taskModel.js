@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 let taskSchema = new mongoose.Schema({
-    title: String,
     description: String,
     list: String,
     author: String,
+    status: Number,
+    order: Number,
     date: {type: Date, default: Date.now()}
 });
 
