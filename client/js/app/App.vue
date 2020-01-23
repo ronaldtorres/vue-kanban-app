@@ -5,20 +5,20 @@
     </el-header>
     <!-- <BToolbar /> -->
     <el-main>
-      <el-row class="task-board">
+      <el-row class="tasks-board">
         <el-col :span="24/(headers.length)" v-for="(column, value, key) in board" :key="key">
           <div class="mg-8">
-            <div class="board-header">
-              <div class="board-header__title">
+            <div class="tasks-board__header">
+              <div class="tasks-board__header__title">
                 <el-tag :type="headers[key].style">{{ headers[key].title }}</el-tag>
               </div>
-              <div class="board-header__options">
+              <div class="tasks-board__header__options">
                 <el-button size="small" icon="el-icon-plus" @click="createTask(column.length, key)"></el-button>
               </div>
             </div>
             <el-divider></el-divider>
           </div>
-          <draggable :id="'dropzone-' + key" :class="'dropzone dropzone-' + key" v-model="board[key]" @start="dragStart" @end="dragEnd" v-bind="draggableBinds" :move="moveTask">
+          <draggable :id="'dropzone-' + key" class="tasks-board__dropzone" v-model="board[key]" @start="dragStart" @end="dragEnd" v-bind="draggableBinds" :move="moveTask">
             <template v-for="task in column">
               <BCard :data="task" @removeTask="removeTask" @updateTask="updateTask" :key="task._id"/>
             </template>
@@ -43,8 +43,6 @@ export default {
   },
   data() {
     return {
-      tasks: undefined,
-      columnRefresh: 0,
       headers: [
         { title: "To do", style: "info" },
         { title: "In progress", style: "warning" },
@@ -74,7 +72,7 @@ export default {
 
   methods: {
     async load() {
-      let tasks = await this.$store.dispatch('tasks/loadTasks');
+      let tasks = await this.$store.dispatch('tasks/load');
       _.map(_.sortBy(tasks, 'order'), this.appendToColumn);
     },
 
@@ -87,7 +85,7 @@ export default {
     },
 
     async createTask(order, status) {
-        let task = await this.$store.dispatch('tasks/createTask', {...arguments});
+        let task = await this.$store.dispatch('tasks/create', {order, status});
         this.appendToColumn(task);
     },
 
@@ -111,12 +109,8 @@ export default {
         updates.push(...this.updateOrderIndexes(oldColumn, oldIndex));
       }
 
-      this.updateManyTasks(updates);
+      this.$store.dispatch('tasks/updateMany', updates);
 
-    },
-
-    updateManyTasks(tasks){
-      this.$http.patch('/api/tasks', tasks);
     },
 
     moveTask(event, originalEvent) {
@@ -154,22 +148,27 @@ export default {
   box-sizing: border-box;
 }
 
-.board-header{
-  display: flex;
-
-  &__title{
-    flex-grow: 1;
-    widows: inherit;
-  }
-}
-
-.task-board{
-  min-height: 70vh;
-}
-
 .el-main{
   margin: 0 auto;
   width: 85vw;
+}
+
+.tasks-board{
+  min-height: 70vh;
+
+  &__header{
+    display: flex;
+
+    &__title{
+      flex-grow: 1;
+      widows: inherit;
+    }
+  }
+
+  &__dropzone{
+    min-height: 400px;
+    padding: 8px;
+  }
 }
 
 .ghost-placeholder{
@@ -177,24 +176,19 @@ export default {
   border: 2px dashed #409EFF;
 }
 
-.dropzone{
-  min-height: 400px;
-  padding: 8px;
-}
-
-.mg-8 {
-  margin: 8px;
-}
-
 .el-button.el-button--mini {
   padding: 12px;
+}
+
+.el-button-full {
+  width: calc(100% - 16px);
 }
 
 .el-divider {
   margin: 12px 0;
 }
 
-.el-button-full {
-  width: calc(100% - 16px);
+.mg-8 {
+  margin: 8px;
 }
 </style>

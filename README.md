@@ -1,13 +1,17 @@
-# Biju app
+# Kanban app
 
-===
+Clone this repository and run:
 
-Biju it's a multipurpose application that seeks for users to have most ot the tools on the same place.
+``npm install
 
-Some features  are:
+- Be sure of having Mongo installed and running.
+- Create a DB in mongo
+- In the project create a .env file with a varible `DB_HOST` and the value would be the db host of the DB that you created before
+    - example: `mongodb://localhost:27017/db-name`
+- Run the project with:
 
-- Task or to-do lists
-- mind-maps
-- Notes
+``npm run dev
 
-Build extensions for safari and chrome for integrations with them is a goal, in adition an app mobile.
+Open in your browser
+
+``localhost:3000

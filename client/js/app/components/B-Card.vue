@@ -50,17 +50,15 @@ export default {
 
     updateTask: _.debounce(function(key) {
       this[key] = this.$refs[key].innerHTML;
-
-      this.$http
-        .put(`/api/tasks/${this.data._id}`, {
+      
+      this.$store.dispatch('tasks/update', {
+        id: this.data._id,
+        data: {
           [key]: this[key]
-        })
-        .then(res => {
-          this.$emit("updateTask", this.$data);
-        })
-        .catch(err => {
-          console.error(err);
-        });
+        }
+      });
+
+      this.$emit("updateTask", this.$data);
     }, 1200)
   }
 };

@@ -11,7 +11,7 @@ export default {
   },
 
   actions: {
-    loadTasks() {
+    load() {
       return this._vm.$http
         .get("/api/tasks")
         .then(({data}) => {
@@ -21,8 +21,7 @@ export default {
         .catch(err => console.error(err));
     },
 
-    createTask(context, {order, status}){
-
+    create(context, {order, status}){
       return this._vm.$http
         .post("/api/tasks", {
           author: "Ronald Torres",
@@ -34,6 +33,21 @@ export default {
           return task;
         })
         .catch(err => console.error(err.result));
+    },
+
+    update(context, {id, data}){
+      return this._vm.$http
+        .put(`/api/tasks/${id}`, data)
+        .then(res => {
+          return res.data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    },
+
+    updateMany(context, tasks){
+      this._vm.$http.patch('/api/tasks', tasks);
     }
   }
 }

@@ -1,10 +1,13 @@
+// request .env
+require('dotenv').config();
+
+// variables
 const express = require('express');
 const app = express();
 const helmet = require('helmet');
 const path = require('path');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
-
 
 // Active security Middlewares by Helmet   
 app.use(helmet());
@@ -20,7 +23,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Init DB
-
 require('./db/connection')();
 
 app.get('/', (req, res) => {
