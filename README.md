@@ -10,7 +10,7 @@ Clone this repository and run:
     - example: `mongodb://localhost:27017/db-name`
 - Run the project with:
 
-    npm run dev
+        npm run dev
 
 Open in your browser
     localhost:3000
