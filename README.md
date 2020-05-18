@@ -2,7 +2,9 @@
 
 Clone this repository and run:
 
-    `npm install`
+```
+npm install
+```
 
 - Be sure of having Mongo installed and running.
 - Create a DB in mongo
@@ -10,11 +12,15 @@ Clone this repository and run:
     - example: `mongodb://localhost:27017/db-name`
 - Run the server with:
 
-    `npm run server`
+```
+npm run server
+```
 
 - Compile Js with
 
-    `npm run dev`
+```
+npm run dev
+```
 
 Open in your browser
 
