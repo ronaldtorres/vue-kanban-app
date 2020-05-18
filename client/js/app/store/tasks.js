@@ -1,7 +1,8 @@
 export default {
   namespaced: true,
   state: {
-    tasks: []
+    tasks: [],
+    last_created: ''
   },
 
   mutations: {
@@ -30,6 +31,7 @@ export default {
           description: ''
         })
         .then(({ data: {data:task} }) => {
+          // context.commit('SET', ['last_created', task._id]);
           return task;
         })
         .catch(err => console.error(err.result));
@@ -44,6 +46,16 @@ export default {
         .catch(err => {
           console.error(err);
         });
+    },
+
+    delete(context, id){
+      
+      return this._vm.$http
+      .delete(`/api/tasks/${id}`).then(res => {
+        return res.data;
+      }).catch(err => {
+        console.error(err);
+      });
     },
 
     updateMany(context, tasks){

@@ -18,9 +18,22 @@
             </div>
             <el-divider></el-divider>
           </div>
-          <draggable :id="'dropzone-' + key" class="tasks-board__dropzone" v-model="board[key]" @start="dragStart" @end="dragEnd" v-bind="draggableBinds" :move="moveTask">
+          <draggable
+            :id="'dropzone-' + key"
+            class="tasks-board__dropzone"
+            v-model="board[key]"
+            @start="dragStart"
+            @end="dragEnd"
+            v-bind="draggableBinds"
+            :move="moveTask"
+          >
             <template v-for="task in column">
-              <BCard :data="task" @removeTask="removeTask" @updateTask="updateTask" :key="task._id"/>
+              <BCard
+                :data="task"
+                @removeTask="removeTask"
+                @updateTask="updateTask"
+                :key="f_index + task._id"
+              />
             </template>
           </draggable>
         </el-col>
@@ -56,24 +69,26 @@ export default {
       },
       dragging: false,
       draggableBinds: {
-        handle : '.handler',
-        group: 'tasks',
-        dragClass: 'drag',
-        draggable: '.el-card',
+        handle: ".handler",
+        group: "tasks",
+        dragClass: "drag",
+        draggable: ".el-card",
         animation: 200,
-        ghostClass: 'ghost-placeholder'
-      }
+        ghostClass: "ghost-placeholder"
+      },
+      f_index: 'A_'
     };
   },
 
   mounted() {
     this.load();
+    this.$store.dispatch('appIsLoaded');
   },
 
   methods: {
     async load() {
-      let tasks = await this.$store.dispatch('tasks/load');
-      _.map(_.sortBy(tasks, 'order'), this.appendToColumn);
+      let tasks = await this.$store.dispatch("tasks/load");
+      _.map(_.sortBy(tasks, "order"), this.appendToColumn);
     },
 
     removeTask(task) {
@@ -85,45 +100,44 @@ export default {
     },
 
     async createTask(order, status) {
-        let task = await this.$store.dispatch('tasks/create', {order, status});
-        this.appendToColumn(task);
+      let task = await this.$store.dispatch('tasks/create', { order, status });
+      this.appendToColumn(task);
     },
 
-    dragStart(){
+    dragStart() {
       this.dragging = true;
     },
 
-    dragEnd({to, newIndex, srcElement, oldIndex}){
+    dragEnd({ to, newIndex, srcElement, oldIndex }) {
       this.dragging = false;
 
-      let oldColumn = srcElement.id.split('-')[1];
-      let column = to.id.split('-')[1];
+      let oldColumn = srcElement.id.split("-")[1];
+      let column = to.id.split("-")[1];
 
-      if(oldColumn === column && oldIndex === newIndex) return;
-      
+      if (oldColumn === column && oldIndex === newIndex) return;
+
       this.board[column][newIndex].status = parseInt(column);
-
+      
       let updates = [...this.updateOrderIndexes(column, newIndex)];
 
-      if(oldColumn !== column){
+      if (oldColumn !== column) {
         updates.push(...this.updateOrderIndexes(oldColumn, oldIndex));
       }
 
       this.$store.dispatch('tasks/updateMany', updates);
-
+      this.forceCardsReRender();
     },
 
     moveTask(event, originalEvent) {
       return;
     },
 
-    updateOrderIndexes(columnIndex, startAt){
-      
+    updateOrderIndexes(columnIndex, startAt) {
       let column = this.board[columnIndex];
 
       for (let i = startAt; i < column.length; i++) {
         column[i].order = i;
-      }
+      } 
 
       return column;
     },
@@ -136,6 +150,10 @@ export default {
     removeOfColumn(task) {
       let status = task.status || 0;
       this.board[status] = _.filter(this.board[status], t => t._id != task._id);
+    },
+
+    forceCardsReRender(){
+      this.f_index = this.f_index == 'A_' ? 'B_' : 'A_';
     }
   }
 };
@@ -148,32 +166,32 @@ export default {
   box-sizing: border-box;
 }
 
-.el-main{
+.el-main {
   margin: 0 auto;
   width: 85vw;
 }
 
-.tasks-board{
+.tasks-board {
   min-height: 70vh;
 
-  &__header{
+  &__header {
     display: flex;
 
-    &__title{
+    &__title {
       flex-grow: 1;
       widows: inherit;
     }
   }
 
-  &__dropzone{
+  &__dropzone {
     min-height: 400px;
     padding: 8px;
   }
 }
 
-.ghost-placeholder{
+.ghost-placeholder {
   color: white;
-  border: 2px dashed #409EFF;
+  border: 2px dashed #409eff;
 }
 
 .el-button.el-button--mini {

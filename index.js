@@ -16,7 +16,9 @@ app.use(express.static('./public'));
 
 // Use body-parser library to implement Middlewares that works with requests based on json or forms.
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,17 +28,16 @@ app.set('view engine', 'ejs');
 require('./db/connection')();
 
 app.get('/', (req, res) => {
-    //res.redirect('/api');
     res.render('home', {
         title: 'home'
     })
 });
 
-app.get('/api', (req, res) => {
-    res.send('Welcome to the Tasks API');
-});
-
 app.use('/api', require('./routes/routes'));
+
+app.get('*', function (req, res) {
+    res.status(404).send('Not found');
+});
 
 app.listen(PORT, _ => {
     console.log('Listen on port:', PORT)

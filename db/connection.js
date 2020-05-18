@@ -8,7 +8,7 @@ module.exports = () => {
     connection.on('error', console.error.bind(console, 'Fail to connect DB'));
     
     connection.on('open', () => {
-        console.info('Correct connection');
+        console.info('Correct DB connection');
     });
   
 }

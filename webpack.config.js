@@ -1,15 +1,22 @@
-const path = require('path');
-const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path'),
+  MiniCSSExtractPlugin = require('mini-css-extract-plugin'),
+  {
+    VueLoaderPlugin
+  } = require('vue-loader'),
+  {
+    HotModuleReplacementPlugin
+  } = require('webpack'),
+  HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV,
   entry: {
     main: ["babel-polyfill", path.resolve(__dirname, 'client/js/main.js')]
   },
 
   output: {
-    path: path.resolve(__dirname, 'public/js'),
-    filename: 'index.js',
+    path: path.resolve(__dirname, 'public'),
+    filename: '[name].js',
     hotUpdateChunkFilename: 'hot-update/hot-update.js',
     hotUpdateMainFilename: 'hot-update/hot-update.json'
   },
@@ -17,10 +24,9 @@ module.exports = {
   module: {
     rules: [{
         test: /\.js$/,
-        loader: 'babel-loader',
         exclude: path.resolve(__dirname, 'node_modules'),
-        options: {
-          presets: ['@babel/preset-env']
+        use: {
+          loader: 'babel-loader',
         }
       },
       {
@@ -32,10 +38,7 @@ module.exports = {
         use: [{
             loader: MiniCSSExtractPlugin.loader,
             options: {
-              // you can specify a publicPath here
-              // by default it uses publicPath in webpackOptions.output
-              publicPath: path.resolve(__dirname, 'public/css'),
-              //hmr: process.env.NODE_ENV === 'development',
+              hmr: process.env.NODE_ENV === 'development',
             },
           },
           // 'vue-style-loader',
@@ -51,18 +54,17 @@ module.exports = {
   },
 
   plugins: [
-    new(require('vue-loader').VueLoaderPlugin)(),
-    new(require('webpack').HotModuleReplacementPlugin)(),
+    new VueLoaderPlugin(),
+    new HotModuleReplacementPlugin(),
     new MiniCSSExtractPlugin({
       filename: "app.css",
-    })
-    //new (require('html-webpack-plugin'))({
-    //  showErrors: true,
-    //cache: true,
-    //title: '',
-    //template: path.join(__dirname, 'index.html'),
-    //favicon: path.join(__dirname, 'favicon.ico'),
-    //})
+    }),
+    // new HtmlWebpackPlugin({
+    //   showErrors: true,
+    //   title: 'html-webpack output',
+    //   template: path.join(__dirname, 'public/js/index.html'),
+    //   //favicon: path.join(__dirname, 'favicon.ico'),
+    // })
   ],
 
   watch: true,
