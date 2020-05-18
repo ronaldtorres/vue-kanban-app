@@ -1,6 +1,6 @@
 # Kanban app
 
-![cover](https://raw.githubusercontent.com/rtorresn10/kanban-app/master/.github/kanban%20app.gif?token=AKSAOI4R5HTMLBY4G57AXOS6YIHGU)
+![cover](https://raw.githubusercontent.com/rtorresn10/kanban-app/master/.github/kanban%20app.gif)
 
 Clone this repository and run:
 
